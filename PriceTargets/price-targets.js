@@ -4,11 +4,6 @@ const style = require('ansi-styles');
 
 console.log('');
 
-
-console.log(chalk.hex('#006400')('TEST'));
-console.log(chalk.rgb(0, 150, 0)('TEST'));
-console.log(chalk.rgb(0, 250, 0)('TEST'));
-
 const questions = [
 	{
 	  type: 'number',
