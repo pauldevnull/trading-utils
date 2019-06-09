@@ -1,8 +1,6 @@
-const inquirer = require('inquirer');
 const chalk = require('chalk');
-const style = require('ansi-styles');
-
-console.log('');
+const inquirer = require('inquirer');
+const Table = require('cli-table2');
 
 const questions = [
 	{
@@ -17,23 +15,58 @@ const questions = [
 	},
 ];
 
-inquirer.prompt(questions).then(answers => {
-	const { buyingPower, entryPrice } = answers;
+const buildTable = (buyingPower, entryPrice) => {
 	const amount = buyingPower / entryPrice;
-	console.log('\n        Amount:  ' + chalk.magenta(amount.toFixed(8)) + '\n');
-  	
+	const increments = [20, 10, 5, 0, -5, -10, -20];
+
+	const styled = (increment, text) => {
+		const intensity = (increment) => increments.indexOf(increment) * (255 / ((increments.length - 1) / 2));
+		
+		const red = increment === 0 ? 105 : (increment >= 0 ? 0 : intensity(increment) - 255);
+		const green = increment === 0 ? 105: (increment <= 0 ? 0 : 255 - intensity(increment));
+		const blue = increment === 0 ? 105 : 0;
+		
+		return chalk.rgb(red, green, blue)(text);
+	};
+
 	const targetAtPercent = (percent) => +((buyingPower + (buyingPower * percent)) / amount).toFixed(8);
 	const targetAtFixed = (fixed) => +((buyingPower + fixed) / amount).toFixed(8);
 
-	// const targets = (change) => targetAtPercent(change / 100) + targetAtFixed(change);
+	const changeLabel = (increment, isPercent) => {
+		if (isPercent) return increment > 0 ? '+' + increment + '%:' : increment + '%:';
+		return increment > 0 ? '+' + increment + ':' : increment + ':';
+	};
+	
+	const table = new Table({
+	  chars: { 'top': '' , 'top-mid': '' , 'top-left': '' , 'top-right': ''
+	         , 'bottom': '' , 'bottom-mid': '' , 'bottom-left': '' , 'bottom-right': ''
+	         , 'left': '' , 'left-mid': '' , 'mid': '' , 'mid-mid': ''
+	         , 'right': '' , 'right-mid': '' , 'middle': ' ' },
+	  style: { 'padding-left': 1, 'padding-right': 0 }
+	});
 
-  	console.log(chalk.rgb(0, 220, 0)(' +20%: ' + targetAtPercent(0.2) + '\t +$20: ' + targetAtFixed(20)));
-  	console.log(chalk.rgb(0, 160, 0)(' +10%: ' + targetAtPercent(0.1) + '\t +$10: ' + targetAtFixed(10)));
-  	console.log(chalk.rgb(0, 100, 0)('  +5%: ' + targetAtPercent(0.05) + '\t  +$5: ' + targetAtFixed(5)));
-  	console.log(chalk.gray('   0%: ' + entryPrice + '\t  +$0: ' + entryPrice));
-  	console.log(chalk.rgb(100, 0, 0)('  -5%: ' + targetAtPercent(-0.05) + '\t  -$5: ' + targetAtFixed(-5)));
-  	console.log(chalk.rgb(160, 0, 0)(' -10%: ' + targetAtPercent(-0.1) + '\t -$10: ' + targetAtFixed(-10)));
-  	console.log(chalk.rgb(200, 0, 0)(' -20%: ' + targetAtPercent(-0.2) + '\t -$20: ' + targetAtFixed(-20)));
+	increments.forEach((increment) => {
+		const percentChangeLabel =  { content:  styled(increment, changeLabel(increment, true)), hAlign: 'right' };
+		const percentChangePrice = { content: styled(increment, targetAtPercent(increment / 100)) };
+		const fixedChangeLabel = { content:  styled(increment, changeLabel(increment, false)), hAlign: 'right' };
+		const fixedChangePrice = { content: styled(increment, targetAtFixed(increment)) };
+		const row = [ percentChangeLabel, percentChangePrice, '\t', fixedChangeLabel, fixedChangePrice ];
+		table.push(row);
+	});
+
+	return table;
+};
+
+const executePrompt = () => inquirer.prompt(questions).then((answers) => {
+	const { buyingPower, entryPrice } = answers;
+	const amount = buyingPower / entryPrice;
+	console.log(chalk.bold('\n        Amount:  ' + chalk.magenta(amount.toFixed(8)) + '\n'));
+
+	const table = buildTable(buyingPower, entryPrice);
+  	console.log(table.toString());
 
   	console.log();
 });
+
+console.log('');
+executePrompt();
