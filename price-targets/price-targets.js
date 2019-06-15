@@ -17,12 +17,12 @@ const questions = [
 
 const buildTable = (buyingPower, entryPrice) => {
     const amount = buyingPower / entryPrice;
-    const increments = [60, 50, 40, 30, 20, 10, 5, 0, -5, -10, -20, -30, -40, -50, -60];
+    const increments = [50, 40, 30, 20, 10, 5, 0, -5, -10, -20, -30, -40, -50];
 
     const styled = (increment, index, text) => {
-        const intensity = (increment) => index * (255 / ((increments.length - 1) / 2));
+        const intensity = (increment) => index * (155 / ((increments.length - 1) / 2)) ;
 
-        const red = Math.round(increment === 0 ? 105 : (increment >= 0 ? 0 : intensity(increment) - 255));
+        const red = Math.round(increment === 0 ? 105 : (increment >= 0 ? 0 : intensity(increment) - 55));
         const green = Math.round(increment === 0 ? 105: (increment <= 0 ? 0 : 255 - intensity(increment)));
         const blue = increment === 0 ? 105 : 0;
 
@@ -46,9 +46,9 @@ const buildTable = (buyingPower, entryPrice) => {
     });
 
     increments.forEach((increment, index) => {
-        const percentChangeLabel =  { content:  styled(increment, index, changeLabel(increment, true)) };
+        const percentChangeLabel =  { content:  styled(increment, index, changeLabel(increment, true)), hAlign: 'right' };
         const percentChangePrice = { content: styled(increment, index, targetAtPercent(increment / 100)) };
-        const fixedChangeLabel = { content:  styled(increment, index, changeLabel(increment, false)) };
+        const fixedChangeLabel = { content:  styled(increment, index, changeLabel(increment, false)), hAlign: 'right' };
         const fixedChangePrice = { content: styled(increment, index, targetAtFixed(increment)) };
         const row = [ percentChangeLabel, percentChangePrice, '', fixedChangeLabel, fixedChangePrice ];
         table.push(row);
