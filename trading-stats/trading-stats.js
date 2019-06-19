@@ -1,27 +1,22 @@
-const Binance = require('binance-api-node').default
-const bitcoinaverage = require('bitcoinaverage');
-
+const Binance = require('binance-api-node').default;
 const fs = require("fs");
 const contents = fs.readFileSync('../settings.json');
 const settings = JSON.parse(contents);
-
 const binance = Binance({
-  apiKey: settings.exchange.binance.key,
-  apiSecret: settings.exchange.binance.secret,
-  // getTime: xxx // time generator function, optional, defaults to () => Date.now()
+	apiKey: settings.exchange.binance.key,
+	apiSecret: settings.exchange.binance.secret,
 });
 
-const cc = require('cryptocompare')
-cc.setApiKey(settings.exchange.cryptocompare.key);
-
+const cryptocompare = require('cryptocompare');
+cryptocompare.setApiKey(settings.exchange.cryptocompare.key);
 
 const getDeposits = async() => {
-    const results = await binance.depositHistory();
+    const results = await binance.depositHistory({ useServerTime: true });
     let totalUSD = 0;
     let totalBTC = 0;
     for (const deposit of results.depositList) {
         const { asset, amount, insertTime } = deposit;
-        const priceHistorical = await cc.priceHistorical(asset, ['USD', 'BTC'], new Date(insertTime)).catch(error => console.log(error));;
+        const priceHistorical = await cryptocompare.priceHistorical(asset, ['USD', 'BTC'], new Date(insertTime)).catch(error => console.log(error));;
         totalUSD += (priceHistorical.USD * amount) || 0;
         totalBTC += (priceHistorical.BTC * amount) || 0;
     }
@@ -29,12 +24,12 @@ const getDeposits = async() => {
 }
 
 const getWithdraws = async() => {
-    const results = await binance.withdrawHistory();
+    const results = await binance.withdrawHistory({ useServerTime: true });
     let totalUSD = 0;
     let totalBTC = 0;
     for (const withdraw of results.withdrawList) {
         const { asset, amount, successTime } = withdraw;
-        const priceHistorical = await cc.priceHistorical(asset, ['USD', 'BTC'], new Date(successTime)).catch(error => console.log(error));
+        const priceHistorical = await cryptocompare.priceHistorical(asset, ['USD', 'BTC'], new Date(successTime)).catch(error => console.log(error));
         totalUSD += (priceHistorical.USD * amount) || 0;
         totalBTC += (priceHistorical.BTC * amount) || 0;
     }
