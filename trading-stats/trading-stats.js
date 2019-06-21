@@ -24,6 +24,15 @@ const coinMarketCapClient = axios.create({
         convert: 'BTC'
     },
 });
+const CoinbasePro = require('coinbase-pro');
+const coinbaseProClient = new CoinbasePro.AuthenticatedClient(
+    settings.exchange.coinbase.key,
+    settings.exchange.coinbase.secret,
+    settings.exchange.coinbase.passphrase,
+    settings.exchange.coinbase.apiURI,
+);
+
+// TODO: get total invested for coinbase
 
 const getTotalInvested = async() => {
     const options = { useServerTime: true };
@@ -47,27 +56,70 @@ const getTotalInvested = async() => {
     });
 }
 
+const getBinanceBalances = async() => {
+    return binance.accountInfo({ useServerTime: true }).then((result) => {
+        return result.balances.filter(cur => (parseFloat(cur.free) + parseFloat(cur.locked)) > 0)
+            .reduce((acc, cur) => {
+                acc[cur.asset] = parseFloat(cur.free) + parseFloat(cur.locked);
+                return acc;
+            }, {});
+    });
+}
+
+const getCoinbaseBalances = async() => {
+    return new Promise((resolve, reject) => {
+            coinbaseProClient.getCoinbaseAccounts().then(result => {
+                resolve(result.reduce((obj, item) => {
+                    obj[item.currency] = item.balance
+                    return obj;
+                }));
+            }).catch(error => console.log(error));
+        }, {}).then((result) => {
+            const balanceFields = omit(result, [
+                'id',
+                'name',
+                'balance',
+                'currency',
+                'type',
+                'primary',
+                'active',
+                'destination_tag_name',
+                'destination_tag_regex',
+                'hold_balance',
+                'hold_currency',
+            ]);
+            return Object.entries(balanceFields)
+                .filter(entry => entry[1] && parseFloat(entry[1]) > 0)
+                .reduce((acc, entry) => { 
+                    acc[entry[0]] = parseFloat(entry[1]);
+                    return acc;
+                }, {});
+        });
+}
+
 const getTotalBalance = async() => {
     const quotesPromise = coinMarketCapClient.get('https://api.coinmarketcap.com/v2/ticker?convert=BTC').then((result) => {
         return result.data.data;
     });
-    const binancePromise = binance.accountInfo({ useServerTime: true }).then((result) => {
-        return result.balances
+    const binancePromise = getBinanceBalances();
+    const coinbasePromise = getCoinbaseBalances();
+    const [quotes, binanceBalances, coinbaseBalances] = await Promise.all([quotesPromise, binancePromise, coinbasePromise]);
+
+    const allCoins = Array.from(new Set(Object.keys(binanceBalances).concat(Object.keys(coinbaseBalances))));
+    const balances = allCoins.map((coin) => {
+        return { asset: coin, balance: (get(binanceBalances, coin, 0) + get(coinbaseBalances, coin, 0)) }
     });
-    const [quotes, balances] = await Promise.all([quotesPromise, binancePromise]);
-    const positiveBalances = balances.filter(balance => (parseFloat(balance.free) + parseFloat(balance.locked)) > 0);
+
     const currencies = ['USD', 'BTC'];
-    return positiveBalances.reduce((acc, cur) => {
-        const { asset, free, locked } = cur;
-        const total = parseFloat(free) + parseFloat(locked);
-        const quote = Object.values(quotes).filter(quote => !!quote && quote.symbol === asset);
-        currencies.forEach((currency) => {
+    return balances.reduce((acc, cur) => {
+        const quote = Object.values(quotes).filter(quote => !!quote && quote.symbol === cur.asset);
+        ['USD', 'BTC'].forEach((currency) => {
             const quotePrice = quote.length && quote[0] && quote[0].quotes[currency].price;
             if (!acc[currency]) acc[currency] = 0;
-            acc[currency] += (total * quotePrice);
+            acc[currency] += (cur.balance * quotePrice);
         });
         return pick(acc, currencies);
-    });
+    }, {});
 }
 
 const getTradingSummary = async() => {
@@ -80,5 +132,10 @@ const getTradingSummary = async() => {
     });
 }
 
-
 getTradingSummary().then(result => console.log(result));
+
+// getCoinbaseBalances().then(result => console.log(result));
+
+// getCoinbaseBalances().then(result => console.log(result));
+
+// getTotalBalance().then(result => console.log(result));
