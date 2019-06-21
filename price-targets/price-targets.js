@@ -1,19 +1,9 @@
+#!/usr/bin/env node
+
+const args = require('minimist')(process.argv.slice(2));
 const chalk = require('chalk');
 const inquirer = require('inquirer');
 const Table = require('cli-table3');
-
-const questions = [
-    {
-      type: 'number',
-      name: 'buyingPower',
-      message: "Buying Power: ",
-    },
-    {
-      type: 'number',
-      name: 'entryPrice',
-      message: " Entry Price: ",
-    },
-];
 
 const buildTable = (buyingPower, entryPrice) => {
     const amount = buyingPower / entryPrice;
@@ -45,6 +35,8 @@ const buildTable = (buyingPower, entryPrice) => {
       style: { 'padding-left': 1, 'padding-right': 0 }
     });
 
+    table.push([], ['', { content: chalk.bold('Amount:') }, { content:  chalk.bold.magenta(amount.toFixed(8)), colSpan: 3 }], []);
+    
     increments.forEach((increment, index) => {
         const percentChangeLabel =  { content:  styled(increment, index, changeLabel(increment, true)), hAlign: 'right' };
         const percentChangePrice = { content: styled(increment, index, targetAtPercent(increment / 100)) };
@@ -57,16 +49,25 @@ const buildTable = (buyingPower, entryPrice) => {
     return table;
 };
 
+const providedBuyingPower = args['buying-power'] || args['buyingPower'] || args['bp'] || args._[0] || null;
+const providedEntryPrice = args['entry-price'] || args['entryPrice'] || args['ep'] || args._[1] || null;
+
+const questions = [
+    { type: 'number', name: 'buyingPower', message: 'Buying Power: ', when: !providedBuyingPower },
+    { type: 'number', name: 'entryPrice',  message: ' Entry Price: ', when: !providedEntryPrice },
+];
+
 const executePrompt = () => inquirer.prompt(questions).then((answers) => {
-    const { buyingPower, entryPrice } = answers;
-    const amount = buyingPower / entryPrice;
-    console.log(chalk.bold('\n        Amount:  ' + chalk.magenta(amount.toFixed(8)) + '\n'));
+    const buyingPower = providedBuyingPower ? providedBuyingPower : answers.buyingPower;
+    const entryPrice = providedEntryPrice ? providedEntryPrice : answers.entryPrice;
 
     const table = buildTable(buyingPower, entryPrice);
-    console.log(table.toString());
-
-    console.log();
+    console.log(table.toString() + '\n');
 });
 
-console.log('');
-executePrompt();
+const styledArg = (text, arg) => chalk.yellow('? ') + text + chalk.cyan(parseFloat(arg));
+
+console.log();
+!!providedBuyingPower ? console.log(styledArg('Buying Power:  ', providedBuyingPower)) : null;
+!!providedEntryPrice ? console.log(styledArg(' Entry Price:  ', providedEntryPrice)) : null;
+executePrompt(providedBuyingPower, providedEntryPrice);

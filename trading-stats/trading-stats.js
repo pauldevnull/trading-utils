@@ -34,6 +34,10 @@ const coinbaseProClient = new CoinbasePro.AuthenticatedClient(
 
 // TODO: get total invested for coinbase
 
+const getCoinbaseInvested = async() => {
+    
+}
+
 const getTotalInvested = async() => {
     const options = { useServerTime: true };
     const currencies = ['USD', 'BTC'];
