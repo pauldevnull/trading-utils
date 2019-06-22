@@ -34,9 +34,9 @@ const coinbaseProClient = new CoinbasePro.AuthenticatedClient(
 
 // TODO: get total invested for coinbase
 
-const getCoinbaseInvested = async() => {
+// const getCoinbaseInvested = async() => {
     
-}
+// }
 
 const getTotalInvested = async() => {
     const options = { useServerTime: true };
@@ -70,49 +70,86 @@ const getBinanceBalances = async() => {
     });
 }
 
-const getCoinbaseBalances = async() => {
-    return new Promise((resolve, reject) => {
-            coinbaseProClient.getCoinbaseAccounts().then(result => {
-                resolve(result.reduce((obj, item) => {
-                    obj[item.currency] = item.balance
-                    return obj;
-                }));
-            }).catch(error => console.log(error));
-        }, {}).then((result) => {
-            const balanceFields = omit(result, [
-                'id',
-                'name',
-                'balance',
-                'currency',
-                'type',
-                'primary',
-                'active',
-                'destination_tag_name',
-                'destination_tag_regex',
-                'hold_balance',
-                'hold_currency',
-            ]);
-            return Object.entries(balanceFields)
-                .filter(entry => entry[1] && parseFloat(entry[1]) > 0)
-                .reduce((acc, entry) => { 
-                    acc[entry[0]] = parseFloat(entry[1]);
-                    return acc;
-                }, {});
-        });
-}
+// const getCoinbaseBalances = async() => {
+//     return new Promise((resolve, reject) => {
+//             coinbaseProClient.getCoinbaseAccounts().then(result => {
+//                 resolve(result.reduce((obj, item) => {
+//                     obj[item.currency] = item.balance
+//                     return obj;
+//                 }));
+//             }).catch(error => console.log(error));
+//         }, {}).then((result) => {
+//             const balanceFields = omit(result, [
+//                 'id',
+//                 'name',
+//                 'balance',
+//                 'currency',
+//                 'type',
+//                 'primary',
+//                 'active',
+//                 'destination_tag_name',
+//                 'destination_tag_regex',
+//                 'hold_balance',
+//                 'hold_currency',
+//             ]);
+//             return Object.entries(balanceFields)
+//                 .filter(entry => entry[1] && parseFloat(entry[1]) > 0)
+//                 .reduce((acc, entry) => { 
+//                     acc[entry[0]] = parseFloat(entry[1]);
+//                     return acc;
+//                 }, {});
+//         });
+// }
+
+// const getCoinbaseProBalances = async() => {
+//     return new Promise((resolve, reject) => {
+//             coinbaseProClient.getCoinbaseProAccounts().then(result => {
+//                 resolve(result.reduce((obj, item) => {
+//                     obj[item.currency] = item.balance
+//                     return obj;
+//                 }));
+//             }).catch(error => console.log(error));
+//         }, {}).then((result) => {
+//             const balanceFields = omit(result, [
+//                 'id',
+//                 'name',
+//                 'balance',
+//                 'currency',
+//                 'type',
+//                 'primary',
+//                 'active',
+//                 'destination_tag_name',
+//                 'destination_tag_regex',
+//                 'hold_balance',
+//                 'hold_currency',
+//             ]);
+//             return Object.entries(balanceFields)
+//                 .filter(entry => entry[1] && parseFloat(entry[1]) > 0)
+//                 .reduce((acc, entry) => { 
+//                     acc[entry[0]] = parseFloat(entry[1]);
+//                     return acc;
+//                 }, {});
+//         });
+// }
 
 const getTotalBalance = async() => {
     const quotesPromise = coinMarketCapClient.get('https://api.coinmarketcap.com/v2/ticker?convert=BTC').then((result) => {
         return result.data.data;
     });
     const binancePromise = getBinanceBalances();
-    const coinbasePromise = getCoinbaseBalances();
-    const [quotes, binanceBalances, coinbaseBalances] = await Promise.all([quotesPromise, binancePromise, coinbasePromise]);
+    // const coinbasePromise = getCoinbaseBalances();
+    // const [quotes, binanceBalances, coinbaseBalances] = await Promise.all([quotesPromise, binancePromise, coinbasePromise]);
+    const [quotes, binanceBalances] = await Promise.all([quotesPromise, binancePromise]);
 
-    const allCoins = Array.from(new Set(Object.keys(binanceBalances).concat(Object.keys(coinbaseBalances))));
+    const allCoins = Array.from(new Set(Object.keys(binanceBalances)));
     const balances = allCoins.map((coin) => {
-        return { asset: coin, balance: (get(binanceBalances, coin, 0) + get(coinbaseBalances, coin, 0)) }
+        return { asset: coin, balance: get(binanceBalances, coin, 0) }
     });
+
+    // const allCoins = Array.from(new Set(Object.keys(binanceBalances).concat(Object.keys(coinbaseBalances))));
+    // const balances = allCoins.map((coin) => {
+    //     return { asset: coin, balance: (get(binanceBalances, coin, 0) + get(coinbaseBalances, coin, 0)) }
+    // });
 
     const currencies = ['USD', 'BTC'];
     return balances.reduce((acc, cur) => {
