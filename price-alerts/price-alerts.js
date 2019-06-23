@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport({
         pass: settings.service.gmail.password,
   }
 });
+const ora = require('ora');
 
 const sendSMS = (sms) => {
     const mailOptions = {
@@ -66,6 +67,9 @@ const checkAlerts = async(alerts) => {
         }
     });
 }
+
+
+const spinner = ora('Detecting price targets...').start();
 
 setInterval(() => {
     fs.readFile('./alerts.json', 'utf8', (err, alerts) => {

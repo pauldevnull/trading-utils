@@ -10,7 +10,8 @@
     "binance-api-node": "^0.9.2",
     "cryptocurrencies": "^7.0.0",
     "lodash": "^4.17.11",
-    "nodemailer": "^6.2.1"
+    "nodemailer": "^6.2.1",
+    "ora": "^3.4.0"
   },
   "author": "pauldevnull",
   "license": "ISC"
