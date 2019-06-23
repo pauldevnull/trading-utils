@@ -34,7 +34,7 @@ const sendSMS = (sms) => {
 }
 
 const checkAlerts = async(alerts) => {
-    const tickers = await binance.allBookTickers()
+    const tickers = await binance.allBookTickers();
     alerts.binance.forEach((alert, index) => {
         const { pair, condition, trigger, triggered } = alert;
         
