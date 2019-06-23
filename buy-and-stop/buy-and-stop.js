@@ -2,15 +2,15 @@
 
 const args = require('minimist')(process.argv.slice(2));
 const Binance = require('binance-api-node').default;
+const binance = Binance({
+    apiKey: settings.exchange.binance.key,
+    apiSecret: settings.exchange.binance.secret,
+});
 const chalk = require('chalk');
 const cloneDeep = require('lodash/cloneDeep');
 const fs = require('fs');
 const inquirer = require('inquirer');
 const settings = require('../settings.json');
-const binance = Binance({
-    apiKey: settings.exchange.binance.key,
-    apiSecret: settings.exchange.binance.secret,
-});
 
 const questions = [
     {  type: 'list',   name: 'exchange', message: '    Exchange: ', choices: ['Binance'], default: 'Binance' },
