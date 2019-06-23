@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const Binance = require('binance-api-node').default;
 const cloneDeep = require('lodash/cloneDeep');
 const fs = require('fs');

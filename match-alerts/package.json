@@ -1,8 +1,8 @@
 {
-  "name": "sms-on-match",
+  "name": "match-alerts",
   "version": "1.0.0",
   "description": "",
-  "main": "sms-on-match.js",
+  "main": "match-alerts.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
