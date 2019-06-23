@@ -1,4 +1,4 @@
 settings.json
-sms-on-match/open-orders.json
+match-alerts/open-orders.json
 price-alerts/alerts.json
 **/node_modules
