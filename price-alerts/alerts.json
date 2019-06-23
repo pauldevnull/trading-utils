@@ -1,0 +1,10 @@
+{
+    "binance": [
+        {
+            "pair": "XRPUSDT",
+            "condition": "price-above",
+            "trigger": 0.44,
+            "triggered": true
+        }
+    ]
+}

@@ -81,9 +81,9 @@ const getOpenOrders = async(localOpenOrders) => {
                 const firstSymbol = separated ? separated.first : '';
                 const secondSymbol = separated ? separated.second : '';
 
-                let body = (isBuyer ? 'buy ' : 'sell ') + qty + ' ' + firstSymbol + ' at ' + price + ' ' + secondSymbol + ' for ' + (parseFloat(qty) * parseFloat(price)) + ' ' + secondSymbol;
+                const body = (isBuyer ? 'buy ' : 'sell ') + qty + ' ' + firstSymbol + ' at ' + price + ' ' + secondSymbol + ' for ' + (parseFloat(qty) * parseFloat(price)) + ' ' + secondSymbol;
 
-                const sms = { subject: 'FILLED',  body }
+                const sms = { subject: 'FILLED',  body };
                 sendSMS(sms);
             }
 
