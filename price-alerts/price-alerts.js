@@ -69,7 +69,8 @@ const checkAlerts = async(alerts) => {
 }
 
 
-const spinner = ora('Detecting price targets...').start();
+console.log();
+const spinner = ora('Detecting price alerts...').start();
 
 setInterval(() => {
     fs.readFile('./alerts.json', 'utf8', (err, alerts) => {

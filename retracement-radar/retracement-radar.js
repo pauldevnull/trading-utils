@@ -112,7 +112,7 @@ const getFibRetracementsForSymbol = async(symbol, interval, limit) => {
 }
 
 
-getAllCandles('30m', 1000, ['USDT']).then(result => console.log(result));
+getAllCandles('4h', 1000, ['USDT']).then(result => console.log(result));
 
 
 // get last 507 (500) candles for 15 minute chart 

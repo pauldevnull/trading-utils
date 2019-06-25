@@ -53,7 +53,7 @@ const executePrompt = () => inquirer.prompt(questions).then(async(answers) => {
 console.log();
 executePrompt().then((result) => {
     const {answers, order} = result;
-    setInterval(() => waitForFulfillment(answers, order), (5  * 1000));
+    setInterval(() => waitForFulfillment(answers, order), (10  * 1000));
 });
 
 // TODO: cancel order on close

@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
         pass: settings.service.gmail.password,
   }
 });
+const ora = require('ora');
 
 const sendSMS = (sms) => {
     const mailOptions = {
@@ -94,6 +95,9 @@ const getOpenOrders = async(localOpenOrders) => {
 
     fs.writeFileSync('./open-orders.json', JSON.stringify(updatedLocalOpenOrders, null, 4));
 }
+
+console.log();
+const spinner = ora('Detecting match alerts...').start();
 
 setInterval(() => {
     fs.readFile('./open-orders.json', 'utf8', (err, localOpenOrders) => {
