@@ -1,52 +1,22 @@
 {
     "binance": [
         {
-            "pair": "CELRUSDT",
+            "pair": "BTCUSDT",
             "condition": "price-below",
-            "trigger": 0.017,
-            "triggered": true
-        },
-        {
-            "pair": "LINKUSDT",
-            "condition": "price-below",
-            "trigger": 1.744,
+            "trigger": 10750,
             "triggered": false
         },
         {
-            "pair": "BTTUSDT",
-            "condition": "price-below",
-            "trigger": 0.001348,
-            "triggered": true
-        },
-        {
-            "pair": "ONEUSDT",
-            "condition": "price-below",
-            "trigger": 0.02105,
-            "triggered": true
-        },
-        {
-            "pair": "TFUELUSDT",
-            "condition": "price-below",
-            "trigger": 0.01114,
-            "triggered": true
-        },
-        {
-            "pair": "TRXUSDT",
-            "condition": "price-below",
-            "trigger": 0.0359,
+            "pair": "BTCUSDT",
+            "condition": "price-above",
+            "trigger": 12000,
             "triggered": false
         },
         {
-            "pair": "VETUSDT",
-            "condition": "price-below",
-            "trigger": 0.00692,
+            "pair": "BTCUSDT",
+            "condition": "price-above",
+            "trigger": 12500,
             "triggered": false
-        },
-        {
-            "pair": "ADAUSDT",
-            "condition": "price-below",
-            "trigger": 0.0945,
-            "triggered": true
         }
     ]
 }

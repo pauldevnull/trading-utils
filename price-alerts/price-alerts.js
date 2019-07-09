@@ -49,8 +49,8 @@ const checkAlerts = async(alerts) => {
                     const sms = { subject: 'PRICE',  body };
                     sendSMS(sms);
                     const updatedAlerts = cloneDeep(alerts);
-                    // updatedAlerts.binance.splice(index, 1);
-                    updatedAlerts.binance[index].triggered = true;
+                    updatedAlerts.binance.splice(index, 1);
+                    // updatedAlerts.binance[index].triggered = true;
                     fs.writeFileSync('./alerts.json', JSON.stringify(updatedAlerts, null, 4));
                 }
             } else {
@@ -59,8 +59,8 @@ const checkAlerts = async(alerts) => {
                     const sms = { subject: 'PRICE',  body };
                     sendSMS(sms);
                     const updatedAlerts = cloneDeep(alerts);
-                    // updatedAlerts.binance.splice(index, 1);
-                    updatedAlerts.binance[index].triggered = true;
+                    updatedAlerts.binance.splice(index, 1);
+                    // updatedAlerts.binance[index].triggered = true;
                     fs.writeFileSync('./alerts.json', JSON.stringify(updatedAlerts, null, 4));
                 }
             }

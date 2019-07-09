@@ -1,39 +1,21 @@
 {
     "binance": [
         {
-            "symbol": "XRPUSDT",
-            "orderId": 177638421,
-            "clientOrderId": "pc_54f8277e50c2460a8a08c02e2636f36f",
-            "price": "0.46613000",
-            "origQty": "1000.00000000",
+            "symbol": "BNBUSDT",
+            "orderId": 176480783,
+            "clientOrderId": "pc_81b402d0b8ce4958834e7e37c1602c42",
+            "price": "35.31000000",
+            "origQty": "40.00000000",
             "executedQty": "0.00000000",
             "cummulativeQuoteQty": "0.00000000",
             "status": "NEW",
             "timeInForce": "GTC",
             "type": "STOP_LOSS_LIMIT",
             "side": "SELL",
-            "stopPrice": "0.46613000",
+            "stopPrice": "35.31000000",
             "icebergQty": "0.00000000",
-            "time": 1561420287319,
-            "updateTime": 1561420287319,
-            "isWorking": false
-        },
-        {
-            "symbol": "TRXUSDT",
-            "orderId": 79474597,
-            "clientOrderId": "pc_ef751fad08344b8ab6dd17ab457caf2b",
-            "price": "0.03831000",
-            "origQty": "25091.30000000",
-            "executedQty": "0.00000000",
-            "cummulativeQuoteQty": "0.00000000",
-            "status": "NEW",
-            "timeInForce": "GTC",
-            "type": "STOP_LOSS_LIMIT",
-            "side": "SELL",
-            "stopPrice": "0.03831000",
-            "icebergQty": "0.00000000",
-            "time": 1561420929571,
-            "updateTime": 1561420929571,
+            "time": 1561830995954,
+            "updateTime": 1561830995954,
             "isWorking": false
         }
     ]

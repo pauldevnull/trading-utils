@@ -7,7 +7,7 @@ const Table = require('cli-table3');
 
 const buildTable = (buyingPower, entryPrice) => {
     const amount = buyingPower / entryPrice;
-    const increments = [50, 40, 30, 20, 10, 5, 0, -5, -10, -20, -30, -40, -50];
+    const increments = [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 5, 0, -5, -10, -20, -30, -40, -50, -60, -70, -80, -90, -100];
 
     const styled = (increment, index, text) => {
         const intensity = (increment) => index * (155 / ((increments.length - 1) / 2)) ;
