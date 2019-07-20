@@ -3,19 +3,19 @@
         {
             "pair": "BTCUSDT",
             "condition": "price-below",
-            "trigger": 10750,
+            "trigger": 10400,
+            "triggered": false
+        },
+        {
+            "pair": "BTCUSDT",
+            "condition": "price-below",
+            "trigger": 10200,
             "triggered": false
         },
         {
             "pair": "BTCUSDT",
             "condition": "price-above",
-            "trigger": 12000,
-            "triggered": false
-        },
-        {
-            "pair": "BTCUSDT",
-            "condition": "price-above",
-            "trigger": 12500,
+            "trigger": 11000,
             "triggered": false
         }
     ]
