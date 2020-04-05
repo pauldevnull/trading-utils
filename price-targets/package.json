@@ -10,7 +10,7 @@
     "chalk": "^2.4.2",
     "cli-table3": "^0.5.1",
     "inquirer": "^6.3.1",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.3"
   },
   "author": "pauldevnull",
   "license": "ISC"
